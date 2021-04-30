@@ -1,18 +1,18 @@
-import { Ghost, Ship } from "./ship";
-import { Cell } from "./cell";
-import { MonData } from "../services/mon.service";
+import { Ghost, Ship } from './ship';
+import { Cell } from './cell';
+import { MonData } from '../services/mon.service';
 
 class ShipPlacementError extends Error {
     constructor(message: string) {
-        super(message)
-        this.name = "ShipPlacementError"
+        super(message);
+        this.name = 'ShipPlacementError';
     }
 }
 
 class BoardError extends Error {
     constructor(message: string) {
-        super(message)
-        this.name = "BoardError";
+        super(message);
+        this.name = 'BoardError';
     }
 }
 
@@ -73,7 +73,7 @@ export class Board {
     placeShips(ships: Ship[]): void {
         ships.forEach(ship => {
             if (ship.placed) {
-              this.setShipPosition(ship, ship.row, ship.col)
+              this.setShipPosition(ship, ship.row, ship.col);
             }
         });
     }
@@ -96,12 +96,20 @@ export class Board {
 
             cells.push(currentCell);
 
-            if (ship.direction === "x") {
+            if (ship.direction === 'x') {
                 col++;
+                if (col === newPos.col + ship.xsize){
+                    col = newPos.col;
+                    row++;
+                }
             }
 
-            if (ship.direction === "y") {
+            if (ship.direction === 'y') {
                 row++;
+                if (row === newPos.row + ship.xsize){
+                    row = newPos.row;
+                    col++;
+                }
             }
         }
 
@@ -112,6 +120,9 @@ export class Board {
         let cells = [];
         let currentCell = null;
 
+        let origrow = row;
+        let origcol = col;
+
         for (let i = 0; i < ghost.size; i++) {
             currentCell = this.getCell(row, col);
 
@@ -119,15 +130,23 @@ export class Board {
                 cells.push(currentCell);
             }
 
-            if (ghost.direction === "x") {
+            if (ghost.direction === 'x') {
                 col++;
+                if (col === origcol + ghost.ship.xsize){
+                    col = origcol;
+                    row++;
+                }
             }
 
-            if (ghost.direction === "y") {
+            if (ghost.direction === 'y') {
                 row++;
+                if (row === origrow + ghost.ship.xsize){
+                    row = origrow;
+                    col++;
+                }
             }
-        }       
-        
+        }
+
         ghost.setShadow(cells);
     }
 }

@@ -1,5 +1,5 @@
-import { AngularFireList } from "@angular/fire/database";
-import { DbItem } from "./db-item";
+import { AngularFireList } from '@angular/fire/database';
+import { DbItem } from './db-item';
 
 
 export class ConnectionStatus {
@@ -7,26 +7,30 @@ export class ConnectionStatus {
   }
 
 export class Game extends DbItem {
-    player1: string = "";
+    player1: string = '';
     p1ready: boolean = false;
-    
-    player2: string = "";
+
+    player2: string = '';
     p2ready: boolean = false;
-    
+
     key: string;
-    shipArgs: number[] = [5, 4, 3, 3, 2];
+    //shipArgs: number[][] = [[5, 1], [4, 2], [4, 1], [3, 1], [3, 1], [2, 1]];
 
     random: boolean = true;
     seed?: string;
 
     get p2open(): boolean {
-        return this.player2 === "";
+        return this.player2 === '';
     }
-    
+
     constructor(
-        public name?: string, 
-        public boardWidth?: number, 
-        public totalCells?: number) {
+        public name?: string,
+        public boardWidth?: number,
+        public totalCells?: number,
+        public totalShips?: number,
+        public shipLengths?: number[],
+        public shipWidths?: number[],
+        ) {
         super();
     }
 
@@ -45,9 +49,9 @@ export class Game extends DbItem {
         const n = this.getPlayerNum(key);
 
         const getStatus = (k: string, ready: boolean) => {
-            return new ConnectionStatus(n, k !== "", ready)
+            return new ConnectionStatus(n, k !== '', ready)
         }
-        
+
         const status = [
             getStatus(this.player1, this.p1ready),
             getStatus(this.player2, this.p2ready)

@@ -28,10 +28,10 @@ export class DatabaseService {
   gameLoaded: boolean = false;
 
   constructor(private af: AngularFireDatabase, private auth: AngularFireAuth) {
-    this.gamesRef = this.af.list("/games");
-    this.shipsRef = this.af.list("/ships");
-    this.shotsRef = this.af.list("/shots");
-    
+    this.gamesRef = this.af.list('/games');
+    this.shipsRef = this.af.list('/ships');
+    this.shotsRef = this.af.list('/shots');
+
     // on init, this class signs the user in anonymously which sets a value
     // for the userId$ observable
     const handleUser = (user: any) => {
@@ -41,7 +41,7 @@ export class DatabaseService {
       else {
         this._userId.next(user.uid);
       }
-    }
+    };
     this.auth.authState.subscribe(handleUser);
 
     // then using the userId, set an observable on the record in the database
@@ -54,14 +54,14 @@ export class DatabaseService {
             (response: SnapshotAction<Game>) => Game.getFromSnapshot(response)
         )
       );
-    }
+    };
     this.userId$.pipe(
       switchMapTo(this.gameKey$
         .pipe(switchMap(getGame$))
       )
     ).subscribe(
       (game: Game) => { this._currentGame.next(game); },
-      () => { this._errorMessage.next("Error Connecting to Game"); }
+      () => { this._errorMessage.next('Error Connecting to Game'); }
     );
 
     // connect the user to the current game
@@ -71,7 +71,7 @@ export class DatabaseService {
     this.playerShips$ = this.getPlayerShips();
     this.otherShips$ = this.getOtherShips();
   }
-  
+
   get currentGame$(): Observable<Game> {
     return this._currentGame.asObservable();
   }
@@ -94,14 +94,14 @@ export class DatabaseService {
   }
 
   getShips(): Observable<Ship[]> {
-    
+
     return this.currentGame$.pipe(
       switchMap((game: Game) => {
 
         const gameFilter = (ref: DatabaseReference) => ref
-              .orderByChild("gameKey").equalTo(game.key);
+              .orderByChild('gameKey').equalTo(game.key);
 
-        return this.af.list("/ships", gameFilter).snapshotChanges().pipe(
+        return this.af.list('/ships', gameFilter).snapshotChanges().pipe(
           map((ships) => ships.map(s => Ship.getFromSnapshot(s)))
         );
 
@@ -136,14 +136,14 @@ export class DatabaseService {
 
   createGame(game: Game): Observable<Game> {
     if (game.random) {
-      game.seed = Date.now() + "";
+      game.seed = Date.now() + '';
     }
 
     return this.userId$.pipe(
       switchMap((id: string) => {
 
         game.player1 = id;
-        
+
         return game.create(this.gamesRef);
       }),
       tap((game) => {
@@ -153,7 +153,7 @@ export class DatabaseService {
   }
 
   connectPlayer(): void {
-    console.log("connecting player 2");
+    console.log('connecting player 2');
 
     combineLatest([
       this.userId$,
@@ -172,12 +172,14 @@ export class DatabaseService {
   }
 
   createShips(game: Game, id: string): void {
-    game.shipArgs.forEach(
-      (n) => {
-        let s = new Ship(n, game.key, id);
-        s.create(this.shipsRef);
-      }
-    );
+    for (let i = 0; i < game.totalShips; i++){
+
+      let xsize = game.shipLengths[i];
+      let ysize = game.shipWidths[i];
+      let size = xsize * ysize;
+      let s = new Ship(size, xsize, ysize, game.key, id);
+      s.create(this.shipsRef);
+    }
   }
 
   updateShip(ship: Ship, data: any): void {
@@ -192,17 +194,17 @@ export class DatabaseService {
       ([playerKey, game]) => {
         game.setReady(playerKey, this.gamesRef);
       }
-    )
+    );
   }
 
   getGameShots(gameKey: string): Observable<Shot[]> {
     const gameFilter = (ref: DatabaseReference) => ref
-      .orderByChild("gameKey").equalTo(gameKey);
-    
-    return this.af.list("/shots", gameFilter).snapshotChanges()
+      .orderByChild('gameKey').equalTo(gameKey);
+
+    return this.af.list('/shots', gameFilter).snapshotChanges()
       .pipe(map(
         shots => shots.map(s => {
-          return Shot.getFromSnapshot(s)
+          return Shot.getFromSnapshot(s);
         })
       )
     );

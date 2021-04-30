@@ -23,9 +23,9 @@ export class PlayGamePageComponent implements OnInit {
   playerShips: Ship[] = [];
   otherShips: Ship[] = [];
 
-  filter: string = "";
+  filter: string = '';
   pendingMessage: string;
-  cancelMessage: string = "";
+  cancelMessage: string = '';
   pendingTime: number;
 
   boardsSet: boolean = false;
@@ -35,20 +35,20 @@ export class PlayGamePageComponent implements OnInit {
 
   private currentShotsLoaded: boolean = false;
   private currentAlerts: Subject<ShotAlert> = new Subject();
-  
+
   private otherShotsLoaded: boolean = false;
   private otherAlerts: Subject<ShotAlert> = new Subject();
 
   constructor(
-    private router: Router, 
-    private db: DatabaseService, 
+    private router: Router,
+    private db: DatabaseService,
     private bs: BoardService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    console.log("initializing play game page");
+    console.log('initializing play game page');
 
     const handleConnection = ([uid, game]) => {
 
@@ -62,23 +62,23 @@ export class PlayGamePageComponent implements OnInit {
           // console.log("calling set boards");
           this.setBoards();
         }
-        
+
         if (!otherReady) {
-          this.pendingMessage = "Waiting for opponent to place ships...";
+          this.pendingMessage = 'Waiting for opponent to place ships...';
         }
-        
+
         if (otherReady) {
-          this.pendingMessage = "";
+          this.pendingMessage = '';
           this.setAlerts();
           this.setPending();
         }
       }
-      
+
       else {
         this.gotoPlacement();
       }
 
-    }
+    };
 
     combineLatest([
       this.db.userId$,
@@ -96,7 +96,21 @@ export class PlayGamePageComponent implements OnInit {
         (cell) => {
           if (cell.shot) { total++; }
         }
-      )
+      );
+    }
+
+    return total;
+  }
+
+  get otherShots(): number {
+    let total = 0;
+
+    if (this.otherBoard) {
+      this.otherBoard.cells.forEach(
+        (cell) => {
+          if (cell.shot) { total++; }
+        }
+      );
     }
 
     return total;
@@ -108,15 +122,15 @@ export class PlayGamePageComponent implements OnInit {
 
 
   setFilter(event: any): void {
-    if (event.code === "Escape") {
-      this.filter = "";
+    if (event.code === 'Escape') {
+      this.filter = '';
     }
 
     this.playerBoard.filterCells(this.filter);
   }
 
   clearFilter(): void {
-    this.filter = "";
+    this.filter = '';
     this.playerBoard.enableAll();
   }
 
@@ -126,12 +140,12 @@ export class PlayGamePageComponent implements OnInit {
         if (p) {
           this.pendingMessage = `Firing at ${p.cell.data.name}`;
           this.pendingTime = p.time;
-          this.cancelMessage = "(Click to cancel)"
+          this.cancelMessage = '(Click to cancel)';
         } else {
-          this.pendingMessage = "";
+          this.pendingMessage = '';
         }
       }
-    )
+    );
   }
 
   setAlerts(): void {
@@ -139,17 +153,17 @@ export class PlayGamePageComponent implements OnInit {
       .subscribe(
         (playerKey: string) => {
           const [current, other] = partition(this.bs.getAlerts(),
-            (sa: ShotAlert) => { return sa.shot.player === playerKey }
-          )
+            (sa: ShotAlert) => { return sa.shot.player === playerKey; }
+          );
 
-          current.subscribe((sa: ShotAlert) => { 
-            this.currentAlerts.next(sa); 
+          current.subscribe((sa: ShotAlert) => {
+            this.currentAlerts.next(sa);
           });
-          other.subscribe((sa: ShotAlert) => { 
-            this.otherAlerts.next(sa); 
+          other.subscribe((sa: ShotAlert) => {
+            this.otherAlerts.next(sa);
           });
         }
-      )
+      );
   }
 
   handleAlert(shotAlert: ShotAlert, self: boolean): void {
@@ -173,7 +187,7 @@ export class PlayGamePageComponent implements OnInit {
         list.push(shot);
         this.bs.handleShot(board, shot);
       }
-    }
+    };
 
     // console.log("subscribing to get Boards...");
     combineLatest([
@@ -206,14 +220,14 @@ export class PlayGamePageComponent implements OnInit {
         );
 
         this.db.getOtherShots().subscribe(
-          (shots: Shot[]) => { 
+          (shots: Shot[]) => {
             shots.forEach(shot => {
               checkToHandle(this._otherShots, boards[0], shot);
             });
 
             if (!this.otherShotsLoaded) {
               this.otherAlerts.subscribe(
-                sa => { this.handleAlert(sa, false)}
+                sa => { this.handleAlert(sa, false); }
               );
             }
             this.otherShotsLoaded = true;
@@ -221,14 +235,14 @@ export class PlayGamePageComponent implements OnInit {
         );
 
         this.db.getCurrentShots().pipe(take(1)).subscribe(
-          (shots: Shot[]) => { 
+          (shots: Shot[]) => {
             shots.forEach(shot => {
               checkToHandle(this._currentShots, boards[1], shot);
             });
 
             if (!this.currentShotsLoaded) {
               this.currentAlerts.subscribe(
-                sa => { this.handleAlert(sa, true)}
+                sa => { this.handleAlert(sa, true); }
               );
             }
             this.currentShotsLoaded = true;
@@ -237,13 +251,13 @@ export class PlayGamePageComponent implements OnInit {
 
 
       }
-    )
+    );
   }
 
   gotoPlacement(): void {
     this.db.currentGame$.pipe(take(1))
       .subscribe(game => {
-        this.router.navigate(["/place"], {queryParams: {'game': game.key}});
+        this.router.navigate(['/place'], {queryParams: {'game': game.key}});
       });
   }
 }
@@ -280,27 +294,27 @@ export class ShotAlertComponent implements OnInit {
     let cell = this.shotAlert.cell;
     let target = cell.data.name;
     let action: string;
-    let coords = `row: ${this.row + 1}, col: ${this.col + 1}`
+    let coords = `row: ${this.row + 1}, col: ${this.col + 1}`;
 
     if (cell.hasShip) {
       if (cell.ship.isSunk) {
-        action = "Ship sunk";
+        action = 'Ship sunk';
       } else {
-        action = "Direct hit";
+        action = 'Direct hit';
       }
     } else {
-      action = "Shot fired";
+      action = 'Shot fired';
     }
 
-    
+
 
     return `${action} at ${target}! (${coords})`;
   }
 
   getCss(): string {
-    let sink = this.shotAlert.sink ? " alert-sink" : "";
-    let good = this.self ? " alert-good" : " alert-bad";
+    let sink = this.shotAlert.sink ? ' alert-sink' : '';
+    let good = this.self ? ' alert-good' : ' alert-bad';
 
-    return "shot-alert" + sink + good;
+    return 'shot-alert' + sink + good;
   }
 }

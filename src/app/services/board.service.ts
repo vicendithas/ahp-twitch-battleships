@@ -100,8 +100,8 @@ export class BoardService {
         );
 
       }
-    }
-    
+    };
+
     let pending$ = timer(0, 1000).pipe(
       take(4),
       finalize(() => { this.pendingShot.next(null); }),

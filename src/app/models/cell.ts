@@ -1,5 +1,5 @@
-import { MonData } from "../services/mon.service";
-import { Ghost, Ship } from "./ship";
+import { MonData } from '../services/mon.service';
+import { Ghost, Ship } from './ship';
 
 export class Cell {
     marked: boolean = false;
@@ -7,7 +7,7 @@ export class Cell {
     ship: Ship | null = null;
     ghost: Ghost | null = null;
     disabled: boolean = false;
-    
+
     get hasShip(): boolean {
         if (this.ship) {
             return true;

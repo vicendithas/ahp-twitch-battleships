@@ -44,6 +44,39 @@
         <mat-checkbox [(ngModel)]="game.random">Randomize</mat-checkbox>
 
     </div>
+
+    <div class="ship-size-fields">
+        <mat-form-field floatLabel="always">
+            <mat-label>Number of Ships</mat-label>
+            <input 
+                (focusout)="validateFields()"
+                matInput 
+                type="text" 
+                [(ngModel)]="game.totalShips" 
+                name="totalShips" />
+        </mat-form-field>
+        
+        <mat-form-field floatLabel="always">
+            <mat-label>Ship Lengths</mat-label>
+            <input 
+                (focusout)="validateFields()"
+                matInput 
+                type="text" 
+                [(ngModel)]="game.shipLengths" 
+                name="shipLenghts" />
+        </mat-form-field>
+        
+        <mat-form-field floatLabel="always">
+            <mat-label>Ship Widths</mat-label>
+            <input 
+                (focusout)="validateFields()"
+                matInput 
+                type="text" 
+                [(ngModel)]="game.shipWidths" 
+                name="shipWidths" />
+        </mat-form-field>
+        <p>List the lengths and widths of the ships with commas between</p>
+    </div>
     
     <button mat-button (click)="openDialog()">Create</button>
 

@@ -1,5 +1,5 @@
-import { Cell } from "./cell";
-import { DbItem } from "./db-item";
+import { Cell } from './cell';
+import { DbItem } from './db-item';
 
 export class Ship extends DbItem {
     cells: Cell[] = [];
@@ -7,7 +7,7 @@ export class Ship extends DbItem {
     col: number = 0;
     selected: boolean = false;
     placed: boolean = false;
-    direction: "x" | "y" = "x";
+    direction: 'x' | 'y' = 'x';
     _ghost: Ghost;
 
     get ghost(): Ghost {
@@ -17,10 +17,12 @@ export class Ship extends DbItem {
 
         return this._ghost;
     }
-    
+
     constructor(
-        public size?: number, 
-        public gameKey?: string, 
+        public size?: number,
+        public xsize?: number,
+        public ysize?: number,
+        public gameKey?: string,
         public player?: string) {
         super();
     }
@@ -30,11 +32,13 @@ export class Ship extends DbItem {
             row: this.row,
             col: this.col,
             size: this.size,
+            xsize: this.xsize,
+            ysize: this.ysize,
             direction: this.direction,
             placed: this.placed,
             gameKey: this.gameKey,
             player: this.player
-        }
+        };
     }
 
     get isSunk(): boolean {
@@ -46,7 +50,7 @@ export class Ship extends DbItem {
     }
 
     getHits(): Cell[] {
-        return this.cells.filter(c => c.shot)
+        return this.cells.filter(c => c.shot);
     }
 
     setPosition(row: number, col: number, cells: Cell[]): void {
@@ -65,17 +69,17 @@ export class Ship extends DbItem {
     clear(): void {
         this.cells.forEach((c) => {
             c.ship = null;
-        })
+        });
 
         this.placed = false;
         this.cells.length = 0;
     }
 
     toggleDirection(): void {
-        if (this.direction === "x") {
-            this.direction = "y";
+        if (this.direction === 'x') {
+            this.direction = 'y';
         } else {
-            this.direction = "x";
+            this.direction = 'x';
         }
     }
 }
@@ -94,7 +98,7 @@ export class Ghost {
         return this.ship.size;
     }
 
-    get direction(): "x" | "y" {
+    get direction(): 'x' | 'y' {
         return this.ship.direction;
     }
 
@@ -110,7 +114,7 @@ export class Ghost {
     clear(): void {
         this.cells.forEach((c) => {
             c.ghost = null;
-        })
+        });
 
         this.cells.length = 0;
     }

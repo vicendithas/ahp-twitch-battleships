@@ -14,8 +14,8 @@ export class ShipContainerComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.cells = Array.from({"length": this.ship.size}, x => new Cell());
-    this.cells.forEach((c) => {c.ship = this.ship});
+    this.cells = Array.from({length: this.ship.size}, x => new Cell());
+    this.cells.forEach((c) => {c.ship = this.ship; });
   }
 
   get isSelected(): boolean {

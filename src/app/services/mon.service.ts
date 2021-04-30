@@ -13,38 +13,38 @@ export interface MonData {
 })
 export class MonService {
   mons: MonData[] = mons;
-  seed: string = Date.now() + "";
+  seed: string = Date.now() + '';
 
   constructor() { }
 
   getMons(game): MonData[] {
     if (!game.random) {
-      return this.mons
-    } else {      
-      let mons = this.mons.slice(0, game.totalCells);
-      return this.getRandom(mons, game.seed)
+      return this.mons;
+    } else {
+      const mymons = this.mons.slice(0, game.totalCells);
+      return this.getRandom(mymons, game.seed);
     }
   }
 
-  getRandom(array: MonData[], seed: string) {
-    
+  getRandom(array: MonData[], seed: string): MonData[] {
+
     seedrandom(seed, { global: true });
     let m = array.length;
     let t: MonData;
     let i: number;
-  
+
     // While there remain elements to shuffle…
     while (m) {
-  
+
       // Pick a remaining element…
       i = Math.floor(Math.random() * m--);
-  
+
       // And swap it with the current element.
       t = array[m];
       array[m] = array[i];
       array[i] = t;
     }
-  
+
     return array;
   }
 }

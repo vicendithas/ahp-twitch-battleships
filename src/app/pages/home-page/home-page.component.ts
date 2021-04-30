@@ -8,13 +8,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./home-page.component.css']
 })
 export class HomePageComponent implements OnInit {
-  
+
   constructor(private router: Router) {}
 
   ngOnInit(): void {
   }
 
   gotoNewGame(): void {
-    this.router.navigate(['/new'])
+    this.router.navigate(['/new']);
   }
 }

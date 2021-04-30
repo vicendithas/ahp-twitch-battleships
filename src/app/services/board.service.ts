@@ -58,7 +58,7 @@ export class BoardService {
 
   selectShip(ship: Ship): void {
     if (this._previous) {
-      let prev = this._previous;
+      const prev = this._previous;
       prev.selected = false;
       prev.ghost.clear();
 
@@ -87,7 +87,7 @@ export class BoardService {
   }
 
   fireShot(board: Board, row: number, col: number): Observable<PendingShot> {
-    let cell = board.getCell(row, col);
+    const cell = board.getCell(row, col);
 
     const handlePending = (p: PendingShot) => {
       this.pendingShot.next(p);
@@ -102,7 +102,7 @@ export class BoardService {
       }
     };
 
-    let pending$ = timer(0, 1000).pipe(
+    const pending$ = timer(0, 1000).pipe(
       take(4),
       finalize(() => { this.pendingShot.next(null); }),
       map((n: number): PendingShot => {
@@ -115,13 +115,13 @@ export class BoardService {
   }
 
   handleShot(board: Board, shot: Shot): void {
-    let cell = board.getCell(shot.row, shot.col);
+    const cell = board.getCell(shot.row, shot.col);
     cell.shot = true;
     this.handleAlert(cell, shot);
   }
 
   handleAlert(cell: Cell, shot: Shot): void {
-    let hit = cell.hasShip;
+    const hit = cell.hasShip;
     let sink = false;
     if (hit) {
       sink = cell.ship.isSunk;

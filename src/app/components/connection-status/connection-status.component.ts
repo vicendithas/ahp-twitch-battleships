@@ -12,7 +12,7 @@ import { ConnectionStatus, Game } from 'src/app/models/game';
   styleUrls: ['./connection-status.component.css']
 })
 export class ConnectionStatusComponent implements OnInit {
-  title: string = "Welcome to AHP's Battleships App";
+  title: string = 'Welcome to AHP\'s Battleships App';
 
   errorMessage: string;
   playerNum: number;
@@ -24,14 +24,14 @@ export class ConnectionStatusComponent implements OnInit {
     this.getGameParam()
       .pipe(
         filter(gameKey => !!gameKey),
-        
+
         switchMap((gameKey) => {
           this.db.setGameKey(gameKey);
 
           return combineLatest([
             this.db.currentGame$,
             this.db.userId$
-          ])
+          ]);
         })
       )
       .subscribe(
@@ -43,22 +43,22 @@ export class ConnectionStatusComponent implements OnInit {
 
     this.db.errorMessage$.subscribe(
       (msg: string) => { this.errorMessage = msg; }
-    )
+    );
   }
 
   getGameParam(): Observable<string> {
     return this.route.queryParams.pipe(
-      map(params => params["game"])
+      map(params => params['game'])
     );
   }
 
   setStatus(game: Game, id: string): void {
-    let status: ConnectionStatus = game.getConnectionStatus(id);
+    const status: ConnectionStatus = game.getConnectionStatus(id);
 
-    this.playerNum = status.playerNum
+    this.playerNum = status.playerNum;
 
-    if (!status.otherConnected) { 
-      this.otherStage = 1
+    if (!status.otherConnected) {
+      this.otherStage = 1;
     }
     if (status.otherConnected && !status.otherReady) {
       this.otherStage = 2;

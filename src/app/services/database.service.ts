@@ -174,10 +174,10 @@ export class DatabaseService {
   createShips(game: Game, id: string): void {
     for (let i = 0; i < game.totalShips; i++){
 
-      let xsize = game.shipLengths[i];
-      let ysize = game.shipWidths[i];
-      let size = xsize * ysize;
-      let s = new Ship(size, xsize, ysize, game.key, id);
+      const xsize = game.shipLengths[i];
+      const ysize = game.shipWidths[i];
+      const size = xsize * ysize;
+      const s = new Ship(size, xsize, ysize, game.key, id);
       s.create(this.shipsRef);
     }
   }
@@ -241,7 +241,7 @@ export class DatabaseService {
     ]).pipe(
       take(1),
       switchMap(([game, uid]) => {
-        let shot = new Shot(row, col, game.key, uid);
+        const shot = new Shot(row, col, game.key, uid);
         return shot.create(this.shotsRef);
         })
       );

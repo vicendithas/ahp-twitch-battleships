@@ -14,7 +14,7 @@ export class Game extends DbItem {
     p2ready: boolean = false;
 
     key: string;
-    //shipArgs: number[][] = [[5, 1], [4, 2], [4, 1], [3, 1], [3, 1], [2, 1]];
+    // shipArgs: number[][] = [[5, 1], [4, 2], [4, 1], [3, 1], [3, 1], [2, 1]];
 
     random: boolean = true;
     seed?: string;
@@ -49,15 +49,15 @@ export class Game extends DbItem {
         const n = this.getPlayerNum(key);
 
         const getStatus = (k: string, ready: boolean) => {
-            return new ConnectionStatus(n, k !== '', ready)
-        }
+            return new ConnectionStatus(n, k !== '', ready);
+        };
 
         const status = [
             getStatus(this.player1, this.p1ready),
             getStatus(this.player2, this.p2ready)
-        ]
+        ];
 
-        return status[n === 1 ? 1 : 0]
+        return status[n === 1 ? 1 : 0];
     }
 
     otherKey(key: string): string | null {
@@ -65,15 +65,15 @@ export class Game extends DbItem {
 
         return [
             this.player1, this.player2
-        ][n === 1 ? 1 : 0]
+        ][n === 1 ? 1 : 0];
     }
 
     getReady(key: string): boolean {
         const n = this.getPlayerNum(key);
         const ready = [
             this.p1ready, this.p2ready
-        ]
-        return ready[n === 1 ? 0 : 1]
+        ];
+        return ready[n === 1 ? 0 : 1];
     }
 
     otherReady(key: string): boolean {
@@ -84,11 +84,11 @@ export class Game extends DbItem {
         const n = this.getPlayerNum(key);
 
         if (n === 1 && !this.p1ready) {
-            this.update(collection, {p1ready: true})
+            this.update(collection, {p1ready: true});
         }
 
         if (n === 2 && !this.p2ready) {
-            this.update(collection, {p2ready: true})
+            this.update(collection, {p2ready: true});
         }
     }
 }

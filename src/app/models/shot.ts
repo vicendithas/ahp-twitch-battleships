@@ -1,4 +1,4 @@
-import { DbItem } from "./db-item";
+import { DbItem } from './db-item';
 
 export class Shot extends DbItem {
     constructor(
@@ -7,10 +7,10 @@ export class Shot extends DbItem {
         public gameKey?: string,
         public player?: string
     ) {
-        super()
+        super();
     }
 
-    check(other: Shot) {
+    check(other: Shot): boolean {
         return this.row === other.row && this.col === other.col;
     }
 }

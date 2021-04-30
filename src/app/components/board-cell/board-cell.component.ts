@@ -34,7 +34,7 @@ export class BoardCellComponent implements OnInit {
     if (this.cell.data) {
       return this.cell.data.name;
     } else {
-      return null
+      return null;
     }
   }
 

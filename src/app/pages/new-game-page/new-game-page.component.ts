@@ -38,7 +38,7 @@ export class NewGamePageComponent implements OnInit {
   }
 
   openDialog(): void {
-    let dialogRef = this.dialog.open(NewGameDialogComponent);
+    const dialogRef = this.dialog.open(NewGameDialogComponent);
 
     dialogRef.afterClosed().subscribe(
       (result: any) => {
@@ -56,14 +56,14 @@ export class NewGamePageComponent implements OnInit {
 
     this.db.createGame(this.game).subscribe(
       () => {
-        this.router.navigate(['/place'], {queryParams: {'game': this.game.key}});
+        this.router.navigate(['/place'], {queryParams: {game: this.game.key}});
       }
     );
   }
 
   validateFields(): void {
     const toNum = (s: string, min: number, max: number): number => {
-      let num = parseInt(s.replace(/\D/g, ''));
+      let num = parseInt(s.replace(/\D/g, ''), 10);
       if (num < min || isNaN(num)) {num = min; }
       if (num > max) {num = max; }
       return num;
@@ -73,8 +73,8 @@ export class NewGamePageComponent implements OnInit {
     this.game.totalCells = toNum(this.game.totalCells + '', 50, 386);
     this.game.totalShips = toNum(this.game.totalShips + '', 1, 10);
 
-    let slStr: string = this.game.shipLengths + '';
-    let slArr = slStr.split(',')
+    const slStr: string = this.game.shipLengths + '';
+    const slArr = slStr.split(',');
     this.game.shipLengths = [];
     while (slArr.length < this.game.totalShips){
       slArr.push('2');
@@ -82,12 +82,12 @@ export class NewGamePageComponent implements OnInit {
     while (slArr.length > this.game.totalShips){
       slArr.pop();
     }
-    for (let item of slArr){
+    for (const item of slArr){
       this.game.shipLengths.push(toNum(item, 1, 6));
     }
 
-    let swStr: string = this.game.shipWidths + '';
-    let swArr = swStr.split(',')
+    const swStr: string = this.game.shipWidths + '';
+    const swArr = swStr.split(',');
     this.game.shipWidths = [];
     while (swArr.length < this.game.totalShips){
       swArr.push('1');
@@ -95,7 +95,7 @@ export class NewGamePageComponent implements OnInit {
     while (swArr.length > this.game.totalShips){
       swArr.pop();
     }
-    for (let item of swArr){
+    for (const item of swArr){
       this.game.shipWidths.push(toNum(item, 1, 6));
     }
   }

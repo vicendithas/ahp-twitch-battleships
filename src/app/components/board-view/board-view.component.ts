@@ -5,7 +5,7 @@ import { Board } from 'src/app/models/board';
 import { Ghost, Ship } from 'src/app/models/ship';
 import { BoardService } from 'src/app/services/board.service';
 import { DatabaseService } from 'src/app/services/database.service';
- 
+
 
 @Component({
   selector: 'app-board-view',
@@ -18,7 +18,7 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() showShips: boolean = true;
   gameStarted: boolean = false;
-  
+
   @Input() placeable: boolean = true;
   @Input() fireable: boolean = false;
 
@@ -30,7 +30,7 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private bs: BoardService, private db: DatabaseService) { }
 
   getGridStyle(): string {
-    return `repeat(${this.board.width}, fit-content(100%))`
+    return `repeat(${this.board.width}, fit-content(100%))`;
   }
 
   ngOnInit(): void {
@@ -42,20 +42,20 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     if (this.fireable) {
-      
+
       combineLatest([
         this.db.userId$,
         this.db.currentGame$
       ]).subscribe(
         ([uid, game]) => {
 
-          if (game.otherReady(uid)) { 
-            this.setUpFiring(); 
+          if (game.otherReady(uid)) {
+            this.setUpFiring();
           }
         }
       );
     }
-      
+
   }
 
   ngOnDestroy(): void {
@@ -75,39 +75,39 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
   // // get a set of coordinates {row: number, col: number} for a cell
   // // associated with a mouseclick event
   getCoordinates(x: number, y: number): any {
-    let box = this.el.nativeElement.getBoundingClientRect();
+    const box = this.el.nativeElement.getBoundingClientRect();
 
     if (x < box.left) { x = box.left; }
 
-    let oX = x - box.left;
-    let oY = y - box.top;
+    const oX = x - box.left;
+    const oY = y - box.top;
 
     return {
-      col: Math.floor(oX / this.bs.cellSize), 
+      col: Math.floor(oX / this.bs.cellSize),
       row: Math.floor(oY / this.bs.cellSize)
-    }
+    };
   }
 
   // // try to place a ship on the board based on a mousemove event
   placeShip(event: any, ship: Ship): void {
-    let coords = this.getCoordinates(event.x, event.y);
-    
+    const coords = this.getCoordinates(event.x, event.y);
+
     try {
       this.board.setShipPosition(ship, coords.row, coords.col);
-    } catch(err) {
-      console.log(err.name);  // currently logs error name, could implement 
+    } catch (err) {
+      console.log(err.name);  // currently logs error name, could implement
       //                      // collision resolution in the future
       console.log(err.message);
     }
   }
 
   placeShadow(event: any, ghost: Ghost): void {
-    let {row, col} = this.getCoordinates(event.x, event.y);
+    const {row, col} = this.getCoordinates(event.x, event.y);
 
     this.board.setShadow(ghost, row, col);
   }
 
-  setEventMethod(name: string, method: (e: any) => void) {
+  setEventMethod(name: string, method: (e: any) => void): void {
     const getEvent = (name: string) => fromEvent(this.el.nativeElement, name);
 
     this.eventSubs.push(getEvent(name).subscribe(method));
@@ -117,11 +117,11 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
     this.setEventMethod('click', (e: any) => this.clickToSelectShip(e));
 
     this.selectedSub = this.bs.selected$.subscribe(
-      (ship) => {      
+      (ship) => {
         this.cancelEventSubs();
-        
+
         if (ship !== null) {
-          let ghost = ship.ghost;
+          const ghost = ship.ghost;
 
           this.setEventMethod(
             'mousemove', (e: any) => this.placeShadow(e, ghost)
@@ -146,42 +146,42 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
   setUpFiring(): void {
 
     this.setEventMethod(
-      'click', (e) => { this.clickToFire(e) }
+      'click', (e) => { this.clickToFire(e); }
     );
 
     this.setEventMethod(
-      'contextmenu', (e) => { this.clickToMark(e) }
+      'contextmenu', (e) => { this.clickToMark(e); }
     );
   }
 
   clickToFire(event: any): void {
-    let {row, col} = this.getCoordinates(event.x, event.y);
-    let cell = this.board.getCell(row, col);
+    const {row, col} = this.getCoordinates(event.x, event.y);
+    const cell = this.board.getCell(row, col);
 
     if (cell && !cell.disabled) {
-      let pending$ = this.bs.fireShot(this.board, row, col);
-      
+      const pending$ = this.bs.fireShot(this.board, row, col);
+
       this.cancelEventSubs();
       this.board.disableAll();
-      
+
       const onClick = fromEvent(document, 'click');
       const resetEvents = () => {
         this.cancelEventSubs();
         this.setUpFiring();
         this.board.enableAll();
         this.clearFilter.emit();
-      }
-      
-      
+      };
+
+
       this.eventSubs.push(
-        
+
         pending$.pipe(
           tap((p) => {
             if (p.time === 0) { resetEvents(); }
           }),
           switchMapTo(onClick)
         ).subscribe(resetEvents)
-  
+
       );
 
     }
@@ -189,8 +189,8 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
 
   clickToMark(event: any): void {
 
-    let {row, col} = this.getCoordinates(event.x, event.y);
-    let cell = this.board.getCell(row, col);
+    const {row, col} = this.getCoordinates(event.x, event.y);
+    const cell = this.board.getCell(row, col);
 
     if (cell) {
       cell.handleMark();
@@ -208,11 +208,11 @@ export class BoardViewComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   clickToSelectShip(event: any): void {
-    let {row, col} = this.getCoordinates(event.x, event.y);
-    let cell = this.board.getCell(row, col);
+    const {row, col} = this.getCoordinates(event.x, event.y);
+    const cell = this.board.getCell(row, col);
 
     if (cell.ship) {
-      let ship = cell.ship;
+      const ship = cell.ship;
       this.bs.selectShip(ship);
       this.board.setShadow(ship.ghost, ship.row, ship.col);
     }

@@ -26,26 +26,26 @@ export class PlaceShipsPageComponent implements OnInit {
   }
 
   constructor(
-    private router: Router, 
-    private db: DatabaseService, 
+    private router: Router,
+    private db: DatabaseService,
     private bs: BoardService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    console.log("initializing place ships");
+    console.log('initializing place ships');
 
     this.bs.getBoard()
       .pipe(
-        tap((board: Board) => { 
-          this.board = board; 
+        tap((board: Board) => {
+          this.board = board;
         }),
-        
+
         switchMap((board: Board) => this.db.playerShips$.pipe(
           take(1),
 
-          tap((ships: Ship[]) => { 
-            board.placeShips(ships); 
+          tap((ships: Ship[]) => {
+            board.placeShips(ships);
           })
         ))
       )
@@ -61,7 +61,7 @@ export class PlaceShipsPageComponent implements OnInit {
     ]).subscribe(
       ([uid, game]) => {
         if (game.getReady(uid)) {
-          console.log("redirecting...");
+          console.log('redirecting...');
           this.redirectCheck$.unsubscribe();
           this.gotoGame();
         }
@@ -70,7 +70,7 @@ export class PlaceShipsPageComponent implements OnInit {
   }
 
   openDialog(): void {
-    let dialogRef = this.dialog.open(StartGameDialogComponent);
+    const dialogRef = this.dialog.open(StartGameDialogComponent);
 
     dialogRef.afterClosed().subscribe(
       (result: any) => {
@@ -91,9 +91,9 @@ export class PlaceShipsPageComponent implements OnInit {
   gotoGame(): void {
     this.db.currentGame$.pipe(take(1))
       .subscribe(game => {
-        console.log("going to play game");
+        console.log('going to play game');
         this.redirectCheck$.unsubscribe();
-        this.router.navigate(["/play"], {queryParams: {'game': game.key}});
+        this.router.navigate(['/play'], {queryParams: {'game': game.key}});
       });
   }
 }

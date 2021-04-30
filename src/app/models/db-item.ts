@@ -1,20 +1,20 @@
-import { AngularFireList, SnapshotAction } from "@angular/fire/database";
-import { from, Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { AngularFireList, SnapshotAction } from '@angular/fire/database';
+import { from, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export class DbItem {
     key: string;
 
     static getFromSnapshot(action: SnapshotAction<any>): any {
         if (action.key === null) {
-            throw Error("Database error ocurred!");
+            throw Error('Database error ocurred!');
         }
 
         return this.getFromData(action.key, action.payload.val());
     }
 
     static getFromData(key: string, data: any): any {
-        let g = new this();
+        const g = new this();
         g.key = key;
         Object.assign(g, data);
 
@@ -37,7 +37,7 @@ export class DbItem {
         return from(collection.update(this.key, data).then(
             () => {
                 Object.assign(this, data);
-                return this
+                return this;
             }
         ));
     }

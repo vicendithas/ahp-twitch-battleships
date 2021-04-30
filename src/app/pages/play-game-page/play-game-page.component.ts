@@ -52,8 +52,8 @@ export class PlayGamePageComponent implements OnInit {
 
     const handleConnection = ([uid, game]) => {
 
-      let ready = game.getReady(uid);
-      let otherReady = game.otherReady(uid);
+      const ready = game.getReady(uid);
+      const otherReady = game.otherReady(uid);
 
       if (ready) {
 
@@ -153,7 +153,7 @@ export class PlayGamePageComponent implements OnInit {
       .subscribe(
         (playerKey: string) => {
           const [current, other] = partition(this.bs.getAlerts(),
-            (sa: ShotAlert) => { return sa.shot.player === playerKey; }
+            (sa: ShotAlert) => sa.shot.player === playerKey
           );
 
           current.subscribe((sa: ShotAlert) => {
@@ -257,7 +257,7 @@ export class PlayGamePageComponent implements OnInit {
   gotoPlacement(): void {
     this.db.currentGame$.pipe(take(1))
       .subscribe(game => {
-        this.router.navigate(['/place'], {queryParams: {'game': game.key}});
+        this.router.navigate(['/place'], {queryParams: {game: game.key}});
       });
   }
 }
@@ -282,7 +282,7 @@ export class ShotAlertComponent implements OnInit {
   ngOnInit(): void {
     this.shotAlert = this.data.shotAlert;
     this.self = this.data.self;
-    let shot = this.data.shotAlert.shot;
+    const shot = this.data.shotAlert.shot;
     this.row = shot.row;
     this.col = shot.col;
 
@@ -291,10 +291,10 @@ export class ShotAlertComponent implements OnInit {
   }
 
   getMessage(): string {
-    let cell = this.shotAlert.cell;
-    let target = cell.data.name;
+    const cell = this.shotAlert.cell;
+    const target = cell.data.name;
     let action: string;
-    let coords = `row: ${this.row + 1}, col: ${this.col + 1}`;
+    const coords = `row: ${this.row + 1}, col: ${this.col + 1}`;
 
     if (cell.hasShip) {
       if (cell.ship.isSunk) {
@@ -312,8 +312,8 @@ export class ShotAlertComponent implements OnInit {
   }
 
   getCss(): string {
-    let sink = this.shotAlert.sink ? ' alert-sink' : '';
-    let good = this.self ? ' alert-good' : ' alert-bad';
+    const sink = this.shotAlert.sink ? ' alert-sink' : '';
+    const good = this.self ? ' alert-good' : ' alert-bad';
 
     return 'shot-alert' + sink + good;
   }

@@ -34,7 +34,7 @@ export class Board {
             return null;
         }
 
-        let cell = this.cells[(row * this.width) + col];
+        const cell = this.cells[(row * this.width) + col];
 
         return cell;
     }
@@ -79,9 +79,9 @@ export class Board {
     }
 
     setShipPosition(ship: Ship, row: number, col: number): void {
-        let cells = [];
+        const cells = [];
         let currentCell = null;
-        let newPos = {row, col};
+        const newPos = {row, col};
 
         for (let i = 0; i < ship.size; i++) {
             currentCell = this.getCell(row, col);
@@ -116,12 +116,12 @@ export class Board {
         ship.setPosition(newPos.row, newPos.col, cells);
     }
 
-    setShadow(ghost: Ghost, row: number, col: number) {
-        let cells = [];
+    setShadow(ghost: Ghost, row: number, col: number): void {
+        const cells = [];
         let currentCell = null;
 
-        let origrow = row;
-        let origcol = col;
+        const origrow = row;
+        const origcol = col;
 
         for (let i = 0; i < ghost.size; i++) {
             currentCell = this.getCell(row, col);

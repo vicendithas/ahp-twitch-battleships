@@ -9,15 +9,11 @@ export class Cell {
     disabled: boolean = false;
 
     get hasShip(): boolean {
-        if (this.ship) {
-            return true;
-        } else {
-            return false;
-        }
+        return Boolean(this.ship);
     }
 
     get selected(): boolean {
-        if (this.ship && this.ship.selected) {
+        if (this.hasShip && this.ship.selected) {
             return true;
         } else {
             return false;
@@ -25,7 +21,7 @@ export class Cell {
     }
 
     get shipSunk(): boolean {
-        if (this.ship && this.ship.isSunk) {
+        if (this.hasShip && this.ship.isSunk) {
             return true;
         } else {
             return false;

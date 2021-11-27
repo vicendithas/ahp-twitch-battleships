@@ -14,7 +14,6 @@ export class Game extends DbItem {
     p2ready: boolean = false;
 
     key: string;
-    // shipArgs: number[][] = [[5, 1], [4, 2], [4, 1], [3, 1], [3, 1], [2, 1]];
 
     random: boolean = true;
     seed?: string;
